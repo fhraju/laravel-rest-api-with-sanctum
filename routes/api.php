@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,28 +15,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('products', ProductController::class);
+// Show all the products
+Route::get('/products', [ProductController::class, 'index']);
 
-// Search for the product
+// Show single products
+Route::get('/products/{product}', [ProductController::class, 'show']);
+
+// Search for the products
 Route::get('/products/search/{name}', [ProductController::class, 'search']);
 
-// // Show all the products
-// Route::get('/products', [ProductController::class, 'index']);
+// Register an User
+Route::post('/register', [UserController::class, 'register']);
 
-// // Show single products
-// Route::get('/products/{product}', [ProductController::class, 'show']);
+// User login
+Route::post('/login', [UserController::class, 'login']);
 
-// // Create product
-// Route::post('/products', [ProductController::class, 'store']);
+// Protected Routes
+Route::middleware(['auth:sanctum'])->group(function () 
+{
+    // Create product
+    Route::post('/products', [ProductController::class, 'store']);
 
-// // update product
-// Route::put('/products/{product}', [ProductController::class, 'update']);
+    // update product
+    Route::put('/products/{product}', [ProductController::class, 'update']);
 
-// // Delete product
-// Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+    // Delete product
+    Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 
+    // Log out an User
+    Route::post('/logout', [UserController::class, 'logout']);
 
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
 });
+
+
+// with resource
+//Route::resource('products', ProductController::class);
+
